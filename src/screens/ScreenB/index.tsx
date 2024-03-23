@@ -1,10 +1,24 @@
 import {View, Text} from 'react-native';
 import React from 'react';
+import styles from '../../styles';
+import NavigationButton from '../../components/atoms/navigationButton';
 
-const ScrenB = () => {
+const ScrenB = ({navigation}: any) => {
   return (
-    <View>
+    <View style={styles.viewContainer}>
       <Text>ScrenB</Text>
+      <View>
+        <NavigationButton
+          navigation={navigation}
+          destination="ScreenA"
+          buttonText="Go to Screen A"
+        />
+        <NavigationButton
+          navigation={navigation}
+          destination="Camera"
+          buttonText="Go to Camera"
+        />
+      </View>
     </View>
   );
 };
