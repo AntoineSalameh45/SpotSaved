@@ -17,7 +17,7 @@ import {
 } from 'react-native-vision-camera';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 
-const ScreenC = () => {
+const CameraScreen = () => {
   const {requestPermission, hasPermission} = useCameraPermission();
   const [cameraDevice, setCameraDevice] = useState<'back' | 'front'>('back');
   const device = useCameraDevice(cameraDevice);
@@ -195,4 +195,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScreenC;
+export default CameraScreen;
