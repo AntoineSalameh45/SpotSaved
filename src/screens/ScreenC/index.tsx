@@ -7,7 +7,6 @@ import {
   Pressable,
   Alert,
   Linking,
-  Button,
   Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -19,7 +18,8 @@ import {
 
 const ScreenC = () => {
   const {requestPermission, hasPermission} = useCameraPermission();
-  const device = useCameraDevice('back');
+  const [cameraDevice, setCameraDevice] = useState<'back' | 'front'>('back');
+  const device = useCameraDevice(cameraDevice);
   const camera = useRef<Camera>(null);
 
   const [isCameraVisible, setIsCameraVisible] = useState(false);
@@ -56,6 +56,11 @@ const ScreenC = () => {
     const photo = await camera.current?.takePhoto();
     setCapturedImage(`file://${photo!.path}`);
     closeCamera();
+  };
+
+  const toggleCameraDevice = () => {
+    const newDevice = cameraDevice === 'back' ? 'front' : 'back';
+    setCameraDevice(newDevice);
   };
 
   if (device === null) {
@@ -111,10 +116,14 @@ const ScreenC = () => {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'space-between',
-              width: '100%',
+              width: '90%',
             }}>
-            <Button title="X" onPress={closeCamera} />
-            <Button title="Switch" onPress={closeCamera} />
+            <Pressable onPress={closeCamera}>
+              <Text>X</Text>
+            </Pressable>
+            <Pressable onPress={toggleCameraDevice}>
+              <Text>Switch</Text>
+            </Pressable>
           </View>
 
           <Camera
@@ -123,6 +132,7 @@ const ScreenC = () => {
             style={StyleSheet.absoluteFill}
             device={device!}
             isActive={true}
+            resizeMode="contain"
           />
 
           <View
@@ -130,8 +140,8 @@ const ScreenC = () => {
               position: 'absolute',
               bottom: 100,
             }}>
-            <Pressable onPress={takePhoto} style={styles.button}>
-              <Text style={{fontSize: 20, color: '#fff'}}>Take photo</Text>
+            <Pressable onPress={takePhoto} style={styles.captureButton}>
+              <Text>.</Text>
             </Pressable>
           </View>
         </>
@@ -154,6 +164,15 @@ const styles = StyleSheet.create({
     transform: [{scale: pressed ? 1.2 : 1}],
     marginTop: 24,
   }),
+  captureButton: {
+    backgroundColor: '#ffffffc4',
+    borderRadius: 100,
+    marginTop: 24,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default ScreenC;
