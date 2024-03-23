@@ -1,7 +1,7 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 import NavigationButton from '../../components/atoms/navigationButton';
-import styles from '../../styles';
+import styles from '../../GlobalStyles';
 
 const ScreenA = ({navigation}: any) => {
   return (

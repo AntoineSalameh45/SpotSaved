@@ -16,7 +16,8 @@ import {
   useCameraPermission,
 } from 'react-native-vision-camera';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
-import styles from '../../styles';
+import styles from '../../GlobalStyles';
+import camStyles from './styles';
 
 const CameraScreen = ({navigation}: any) => {
   const {requestPermission, hasPermission} = useCameraPermission();
@@ -50,7 +51,6 @@ const CameraScreen = ({navigation}: any) => {
       return;
     }
 
-    // open camera logic
     openCamera();
   };
 
@@ -93,16 +93,10 @@ const CameraScreen = ({navigation}: any) => {
     <SafeAreaView style={camStyles.mainView}>
       {capturedImage ? (
         <>
-          <View
-            style={{
-              width: 300,
-              height: 300,
-              borderRadius: 10,
-              overflow: 'hidden',
-            }}>
+          <View style={camStyles.capturedImageContainer}>
             <Image
               source={{uri: capturedImage}}
-              style={{width: '100%', height: '100%'}}
+              style={camStyles.capturedImage}
             />
           </View>
 
@@ -161,31 +155,4 @@ const CameraScreen = ({navigation}: any) => {
     </SafeAreaView>
   );
 };
-const camStyles = StyleSheet.create({
-  mainView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-    backgroundColor: 'blue',
-  },
-  button: ({pressed}: any) => ({
-    padding: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: pressed ? '#001833' : '#007aff',
-    borderRadius: 8,
-    transform: [{scale: pressed ? 1.2 : 1}],
-    marginTop: 24,
-  }),
-  captureButton: {
-    backgroundColor: '#ffffffc4',
-    borderRadius: 100,
-    marginTop: 24,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-
 export default CameraScreen;
