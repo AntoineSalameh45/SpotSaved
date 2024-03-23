@@ -16,8 +16,9 @@ import {
   useCameraPermission,
 } from 'react-native-vision-camera';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
+import styles from '../../styles';
 
-const CameraScreen = () => {
+const CameraScreen = ({navigation}: any) => {
   const {requestPermission, hasPermission} = useCameraPermission();
   const [cameraDevice, setCameraDevice] = useState<'back' | 'front'>('back');
   const device = useCameraDevice(cameraDevice);
@@ -63,24 +64,24 @@ const CameraScreen = () => {
     const newDevice = cameraDevice === 'back' ? 'front' : 'back';
     setCameraDevice(newDevice);
   };
+
   const saveImage = async () => {
     await CameraRoll.saveAsset(capturedImage!, {type: 'photo'}).then(() => {
       Alert.alert('Success', 'Photo saved successfully', [
         {style: 'cancel', text: 'cancel'},
         {
-          text: 'open photos',
-          onPress: async () => {
-            await Linking.openURL('photos-redirect://');
+          text: 'See Photos',
+          onPress: () => {
+            navigation.navigate('Gallery');
           },
         },
       ]);
     });
-    console.log(saveImage);
   };
 
   if (device === null) {
     return (
-      <View style={styles.mainView}>
+      <View style={camStyles.mainView}>
         <Text style={{fontSize: 20, color: 'red'}}>
           Camera feature not supported
         </Text>
@@ -89,7 +90,7 @@ const CameraScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.mainView}>
+    <SafeAreaView style={camStyles.mainView}>
       {capturedImage ? (
         <>
           <View
@@ -109,17 +110,17 @@ const CameraScreen = () => {
             onPress={() => {
               setCapturedImage(null);
             }}
-            style={styles.button}>
+            style={camStyles.button}>
             <Text style={{fontSize: 20, color: '#fff'}}>Clear image</Text>
           </Pressable>
-          <Pressable onPress={saveImage} style={styles.button}>
+          <Pressable onPress={saveImage} style={camStyles.button}>
             <Text style={{fontSize: 20, color: '#fff'}}>
               Save to camera roll
             </Text>
           </Pressable>
         </>
       ) : (
-        <Pressable onPress={handleCameraPermission} style={styles.button}>
+        <Pressable onPress={handleCameraPermission} style={camStyles.button}>
           <Text style={{fontSize: 20, color: '#fff'}}>
             {hasPermission ? 'Open camera' : 'Request camera access'}
           </Text>
@@ -128,16 +129,7 @@ const CameraScreen = () => {
 
       {isCameraVisible && (
         <>
-          <View
-            style={{
-              position: 'absolute',
-              top: 10,
-              zIndex: 1,
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: '90%',
-            }}>
+          <View style={styles.cameraButtons}>
             <Pressable onPress={closeCamera}>
               <Text>X</Text>
             </Pressable>
@@ -160,7 +152,7 @@ const CameraScreen = () => {
               position: 'absolute',
               bottom: 100,
             }}>
-            <Pressable onPress={takePhoto} style={styles.captureButton}>
+            <Pressable onPress={takePhoto} style={camStyles.captureButton}>
               <Text>.</Text>
             </Pressable>
           </View>
@@ -169,11 +161,12 @@ const CameraScreen = () => {
     </SafeAreaView>
   );
 };
-const styles = StyleSheet.create({
+const camStyles = StyleSheet.create({
   mainView: {
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    backgroundColor: 'blue',
   },
   button: ({pressed}: any) => ({
     padding: 16,
