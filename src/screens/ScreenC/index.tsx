@@ -15,6 +15,7 @@ import {
   useCameraDevice,
   useCameraPermission,
 } from 'react-native-vision-camera';
+import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 
 const ScreenC = () => {
   const {requestPermission, hasPermission} = useCameraPermission();
@@ -62,6 +63,20 @@ const ScreenC = () => {
     const newDevice = cameraDevice === 'back' ? 'front' : 'back';
     setCameraDevice(newDevice);
   };
+  const saveImage = async () => {
+    await CameraRoll.saveAsset(capturedImage!, {type: 'photo'}).then(() => {
+      Alert.alert('Success', 'Photo saved successfully', [
+        {style: 'cancel', text: 'cancel'},
+        {
+          text: 'open photos',
+          onPress: async () => {
+            await Linking.openURL('photos-redirect://');
+          },
+        },
+      ]);
+    });
+    console.log(saveImage);
+  };
 
   if (device === null) {
     return (
@@ -96,6 +111,11 @@ const ScreenC = () => {
             }}
             style={styles.button}>
             <Text style={{fontSize: 20, color: '#fff'}}>Clear image</Text>
+          </Pressable>
+          <Pressable onPress={saveImage} style={styles.button}>
+            <Text style={{fontSize: 20, color: '#fff'}}>
+              Save to camera roll
+            </Text>
           </Pressable>
         </>
       ) : (
