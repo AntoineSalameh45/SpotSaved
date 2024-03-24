@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
-    backgroundColor: 'blue',
+    backgroundColor: '#6D9773',
   },
   cameraButtons: {
     position: 'absolute',
