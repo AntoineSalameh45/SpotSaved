@@ -23,7 +23,7 @@ import Close from '../../assets/CloseSvg.svg';
 import CameraSvg from '../../assets/CameraSvg.svg';
 
 const CameraScreen = ({navigation}: any) => {
-  const {requestPermission, hasPermission} = useCameraPermission();
+  const {requestPermission} = useCameraPermission();
   const [cameraDevice, setCameraDevice] = useState<'back' | 'front'>('back');
   const device = useCameraDevice(cameraDevice);
   const camera = useRef<Camera>(null);
