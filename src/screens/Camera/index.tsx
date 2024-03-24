@@ -96,7 +96,10 @@ const CameraScreen = ({navigation}: any) => {
           <View style={camStyles.capturedImageContainer}>
             <Image
               source={{uri: capturedImage}}
-              style={camStyles.capturedImage}
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
             />
           </View>
 

@@ -30,12 +30,6 @@ const camStyles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
   },
-  capturedImage: {
-    flex: 1,
-    aspectRatio: 1,
-    width: '100%',
-    height: 'auto',
-  },
   otherButtons: {
     fontSize: 25,
     fontWeight: 'bold',

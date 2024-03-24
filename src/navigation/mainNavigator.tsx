@@ -1,10 +1,10 @@
 import React from 'react';
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import ScreenA from '../screens/ScreenA';
 import ScreenB from '../screens/ScreenB';
 import CameraScreen from '../screens/Camera';
 
-const MainStackNavigator = createMaterialBottomTabNavigator();
+const MainStackNavigator = createBottomTabNavigator();
 
 const MainNavigator = () => {
   return (
