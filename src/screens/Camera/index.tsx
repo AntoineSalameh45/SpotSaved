@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useState} from 'react';
 import {
   View,
@@ -8,13 +7,10 @@ import {
   Alert,
   Linking,
   Image,
+  PermissionsAndroid,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {
-  Camera,
-  useCameraDevice,
-  useCameraPermission,
-} from 'react-native-vision-camera';
+import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import styles from '../../GlobalStyles';
 import camStyles from './styles';
@@ -24,8 +20,11 @@ import CameraSvg from '../../assets/CameraSvg.svg';
 import SaveSvg from '../../assets/SaveSvg.svg';
 import Discard from '../../assets/DiscardSvg.svg';
 
-const CameraScreen = ({navigation}: any) => {
-  const {requestPermission} = useCameraPermission();
+interface Props {
+  navigation: any;
+}
+
+const CameraScreen: React.FC<Props> = ({navigation}) => {
   const [cameraDevice, setCameraDevice] = useState<'back' | 'front'>('back');
   const device = useCameraDevice(cameraDevice);
   const camera = useRef<Camera>(null);
@@ -33,36 +32,51 @@ const CameraScreen = ({navigation}: any) => {
   const [isCameraVisible, setIsCameraVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState<null | string>(null);
 
-  const openCamera = () => setIsCameraVisible(true);
-  const closeCamera = () => setIsCameraVisible(false);
-
-  const handleCameraPermission = async () => {
-    const isAccessGranted = await requestPermission();
-
-    if (!isAccessGranted) {
-      Alert.alert('Permission required', 'Open settings to grant permission', [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Open settings',
-          style: 'default',
-          onPress: async () => {
-            await Linking.openSettings();
+  const openCamera = async () => {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      {
+        title: 'Camera Permission',
+        message: 'App needs access to your camera.',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      setIsCameraVisible(true);
+    } else {
+      Alert.alert(
+        'Permission required',
+        'Open settings to grant camera permission',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
           },
-        },
-      ]);
-      return;
+          {
+            text: 'Open settings',
+            style: 'default',
+            onPress: async () => {
+              await Linking.openSettings();
+            },
+          },
+        ],
+      );
     }
-
-    openCamera();
   };
+
+  const closeCamera = () => setIsCameraVisible(false);
 
   const takePhoto = async () => {
     const photo = await camera.current?.takePhoto();
-    setCapturedImage(`file://${photo!.path}`);
-    closeCamera();
+
+    if (photo && photo.path) {
+      setCapturedImage(`file://${photo.path}`);
+      closeCamera();
+    } else {
+      console.error('Failed to capture photo');
+    }
   };
 
   const toggleCameraDevice = () => {
@@ -71,26 +85,32 @@ const CameraScreen = ({navigation}: any) => {
   };
 
   const saveImage = async () => {
-    await CameraRoll.saveAsset(capturedImage!, {type: 'photo'}).then(() => {
-      Alert.alert('Success', 'Photo saved successfully', [
-        {
-          style: 'cancel',
-          text: 'cancel',
-          onPress: () => {
-            setCapturedImage(null);
-            openCamera();
+    try {
+      const savedImage = await CameraRoll.save(capturedImage!, {type: 'photo'});
+      if (savedImage) {
+        Alert.alert('Success', 'Photo saved successfully', [
+          {
+            style: 'cancel',
+            text: 'cancel',
+            onPress: () => {
+              setCapturedImage(null);
+              openCamera();
+            },
           },
-        },
-        {
-          text: 'See Photos',
-          onPress: () => {
-            navigation.navigate('Gallery');
-            setCapturedImage(null);
-            openCamera();
+          {
+            text: 'See Photos',
+            onPress: () => {
+              navigation.navigate('Home', {capturedImage});
+            },
           },
-        },
-      ]);
-    });
+        ]);
+      } else {
+        Alert.alert('Error', 'Failed to save photo');
+      }
+    } catch (error) {
+      console.error('Error saving photo:', error);
+      Alert.alert('Error', 'Failed to save photo');
+    }
   };
 
   if (device === null) {
@@ -130,9 +150,7 @@ const CameraScreen = ({navigation}: any) => {
           </View>
         </>
       ) : (
-        <Pressable
-          onPress={handleCameraPermission}
-          style={camStyles.openCameraButton}>
+        <Pressable onPress={openCamera} style={camStyles.openCameraButton}>
           <CameraSvg width={40} height={40} />
         </Pressable>
       )}
@@ -171,4 +189,5 @@ const CameraScreen = ({navigation}: any) => {
     </SafeAreaView>
   );
 };
+
 export default CameraScreen;

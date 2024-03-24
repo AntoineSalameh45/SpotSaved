@@ -1,11 +1,12 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {RootStackParamList} from './RootStackParamList';
 import ScreenA from '../screens/ScreenA';
 import ScreenB from '../screens/ScreenB';
 import CameraScreen from '../screens/Camera';
 import MyTabBar from '../components/organisms/CustomTabBar';
 
-const MainStackNavigator = createBottomTabNavigator();
+const MainStackNavigator = createBottomTabNavigator<RootStackParamList>();
 
 const MainNavigator = () => {
   return (
