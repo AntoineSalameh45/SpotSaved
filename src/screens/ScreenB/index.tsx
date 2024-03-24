@@ -1,5 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
-import {View, FlatList, ActivityIndicator, Text} from 'react-native';
+import {View, FlatList, ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import styles from '../../GlobalStyles';
 import CharacterListItem from '../../components/organisms/CharacterListItem';
