@@ -30,13 +30,11 @@ const camStyles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
   },
-  otherButtons: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: '#fff',
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: {width: 2, height: 2},
-    textShadowRadius: 30,
+  capturedButtonsContainer: {
+    flexDirection: 'row-reverse',
+    width: '65%',
+    justifyContent: 'space-between',
+    marginTop: 30,
   },
 });
 export default camStyles;

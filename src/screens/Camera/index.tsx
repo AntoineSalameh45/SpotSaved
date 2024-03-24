@@ -21,6 +21,8 @@ import camStyles from './styles';
 import CamFlip from '../../assets/CameraFlipSvg.svg';
 import Close from '../../assets/CloseSvg.svg';
 import CameraSvg from '../../assets/CameraSvg.svg';
+import SaveSvg from '../../assets/SaveSvg.svg';
+import Discard from '../../assets/DiscardSvg.svg';
 
 const CameraScreen = ({navigation}: any) => {
   const {requestPermission} = useCameraPermission();
@@ -71,11 +73,20 @@ const CameraScreen = ({navigation}: any) => {
   const saveImage = async () => {
     await CameraRoll.saveAsset(capturedImage!, {type: 'photo'}).then(() => {
       Alert.alert('Success', 'Photo saved successfully', [
-        {style: 'cancel', text: 'cancel'},
+        {
+          style: 'cancel',
+          text: 'cancel',
+          onPress: () => {
+            setCapturedImage(null);
+            openCamera();
+          },
+        },
         {
           text: 'See Photos',
           onPress: () => {
             navigation.navigate('Gallery');
+            setCapturedImage(null);
+            openCamera();
           },
         },
       ]);
@@ -105,18 +116,18 @@ const CameraScreen = ({navigation}: any) => {
               }}
             />
           </View>
-
-          <Pressable
-            onPress={() => {
-              setCapturedImage(null);
-            }}>
-            <Text style={{fontSize: 20, color: '#fff'}}>Clear image</Text>
-          </Pressable>
-          <Pressable onPress={saveImage}>
-            <Text style={{fontSize: 20, color: '#fff'}}>
-              Save to camera roll
-            </Text>
-          </Pressable>
+          <View style={camStyles.capturedButtonsContainer}>
+            <Pressable
+              onPress={() => {
+                setCapturedImage(null);
+                openCamera();
+              }}>
+              <Discard width={30} height={30} />
+            </Pressable>
+            <Pressable onPress={saveImage}>
+              <SaveSvg width={30} height={30} />
+            </Pressable>
+          </View>
         </>
       ) : (
         <Pressable
