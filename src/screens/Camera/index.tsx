@@ -125,10 +125,10 @@ const CameraScreen = ({navigation}: any) => {
         <>
           <View style={styles.cameraButtons}>
             <Pressable onPress={closeCamera}>
-              <Text>X</Text>
+              <Text style={camStyles.otherButtons}>X</Text>
             </Pressable>
             <Pressable onPress={toggleCameraDevice}>
-              <Text>Switch</Text>
+              <Text style={camStyles.otherButtons}>Switch</Text>
             </Pressable>
           </View>
 
@@ -146,8 +146,8 @@ const CameraScreen = ({navigation}: any) => {
               position: 'absolute',
               bottom: 100,
             }}>
-            <Pressable onPress={takePhoto} style={camStyles.captureButton}>
-              <Text>.</Text>
+            <Pressable onPress={takePhoto}>
+              <View style={camStyles.captureButton} />
             </Pressable>
           </View>
         </>

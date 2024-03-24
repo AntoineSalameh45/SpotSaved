@@ -17,13 +17,12 @@ const camStyles = StyleSheet.create({
     marginTop: 24,
   }),
   captureButton: {
-    backgroundColor: '#ffffffc4',
-    borderRadius: 100,
-    marginTop: 24,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#00000042',
+    borderRadius: 100 / 2,
+    width: 75,
+    height: 75,
+    borderWidth: 3,
+    borderColor: '#fff',
   },
   capturedImageContainer: {
     width: 300,
@@ -33,9 +32,17 @@ const camStyles = StyleSheet.create({
   },
   capturedImage: {
     flex: 1,
-    aspectRatio: 1, // Ensures the image maintains its aspect ratio
+    aspectRatio: 1,
     width: '100%',
-    height: 'auto', // Sets the height to auto to maintain aspect ratio
+    height: 'auto',
+  },
+  otherButtons: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#fff',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: {width: 2, height: 2},
+    textShadowRadius: 30,
   },
 });
 export default camStyles;
