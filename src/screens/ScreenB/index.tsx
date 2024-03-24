@@ -7,22 +7,16 @@ import CharacterListItem from '../../components/organisms/CharacterListItem';
 const ScreenB = () => {
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState([]);
-  const [nextPage, setNextPage] = useState('');
-  const fetchItems = async () => {
-    const response = await fetch('https://rickandmortyapi.com/api/character');
-    const responseJson = await response.json();
+  const [nextPage, setNextPage] = useState(
+    'https://rickandmortyapi.com/api/character',
+  );
 
-    setItems(responseJson.results);
-    setNextPage(responseJson.info.next);
-
-    setLoading(false);
-  };
-
-  const loadMore = async () => {
+  const fetchNextPage = async () => {
+    setLoading(true);
     const response = await fetch(nextPage);
     const responseJson = await response.json();
 
-    setItems((existingItems) => {
+    setItems(existingItems => {
       return [...existingItems, ...responseJson.results];
     });
 
@@ -31,12 +25,8 @@ const ScreenB = () => {
     setLoading(false);
   };
   useEffect(() => {
-    fetchItems();
+    fetchNextPage();
   }, []);
-
-  if (loading) {
-    return <ActivityIndicator />;
-  }
 
   return (
     <View style={styles.viewContainer}>
@@ -44,11 +34,14 @@ const ScreenB = () => {
         data={items}
         renderItem={data => <CharacterListItem character={data.item} />}
         ListFooterComponent={() => (
-          <Text
-            style={{alignSelf: 'center', fontSize: 20, color: '#fff'}}
-            onPress={loadMore}>
-            Load More
-          </Text>
+          <View>
+            {loading && <ActivityIndicator />}
+            <Text
+              style={{alignSelf: 'center', fontSize: 20, color: '#fff'}}
+              onPress={fetchNextPage}>
+              Load More
+            </Text>
+          </View>
         )}
       />
     </View>
