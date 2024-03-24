@@ -9,24 +9,25 @@ type CharacterListItem = {
 
 const CharacterListItem = ({character}: CharacterListItem) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.name}>{character.name}</Text>
-      <Image source={{uri: character.image}} style={styles.image} />
-    </View>
+    <>
+      <View style={cardStyles.container}>
+        <Text style={cardStyles.name}>{character.name}</Text>
+        <Image source={{uri: character.image}} style={cardStyles.image} />
+      </View>
+    </>
   );
 };
 
-const styles = StyleSheet.create({
+const cardStyles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    flex: 1,
-    borderRadius: 10,
+    backgroundColor: '#0C3B2E',
+    width: '50%',
   },
   name: {
-    height: 20,
+    height: 30,
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'darkslategrey',
+    color: '#FFBA00',
     alignSelf: 'center',
     marginVertical: 10,
   },
