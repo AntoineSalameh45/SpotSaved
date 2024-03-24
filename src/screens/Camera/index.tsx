@@ -18,6 +18,9 @@ import {
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import styles from '../../GlobalStyles';
 import camStyles from './styles';
+import CamFlip from '../../assets/CameraFlipSvg.svg';
+import Close from '../../assets/CloseSvg.svg';
+import CameraSvg from '../../assets/CameraSvg.svg';
 
 const CameraScreen = ({navigation}: any) => {
   const {requestPermission, hasPermission} = useCameraPermission();
@@ -106,21 +109,20 @@ const CameraScreen = ({navigation}: any) => {
           <Pressable
             onPress={() => {
               setCapturedImage(null);
-            }}
-            style={camStyles.button}>
+            }}>
             <Text style={{fontSize: 20, color: '#fff'}}>Clear image</Text>
           </Pressable>
-          <Pressable onPress={saveImage} style={camStyles.button}>
+          <Pressable onPress={saveImage}>
             <Text style={{fontSize: 20, color: '#fff'}}>
               Save to camera roll
             </Text>
           </Pressable>
         </>
       ) : (
-        <Pressable onPress={handleCameraPermission} style={camStyles.button}>
-          <Text style={{fontSize: 20, color: '#fff'}}>
-            {hasPermission ? 'Open camera' : 'Request camera access'}
-          </Text>
+        <Pressable
+          onPress={handleCameraPermission}
+          style={camStyles.openCameraButton}>
+          <CameraSvg width={40} height={40} />
         </Pressable>
       )}
 
@@ -128,10 +130,10 @@ const CameraScreen = ({navigation}: any) => {
         <>
           <View style={styles.cameraButtons}>
             <Pressable onPress={closeCamera}>
-              <Text style={camStyles.otherButtons}>X</Text>
+              <Close width={30} height={30} />
             </Pressable>
             <Pressable onPress={toggleCameraDevice}>
-              <Text style={camStyles.otherButtons}>Switch</Text>
+              <CamFlip width={30} height={30} />
             </Pressable>
           </View>
 

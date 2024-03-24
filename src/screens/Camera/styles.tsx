@@ -7,15 +7,15 @@ const camStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'blue',
   },
-  button: ({pressed}: any) => ({
+  openCameraButton: {
     padding: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: pressed ? '#001833' : '#007aff',
-    borderRadius: 8,
-    transform: [{scale: pressed ? 1.2 : 1}],
-    marginTop: 24,
-  }),
+    backgroundColor: '#fff',
+    borderRadius: 100 / 2,
+    position: 'absolute',
+    bottom: 100,
+  },
   captureButton: {
     backgroundColor: '#00000042',
     borderRadius: 100 / 2,
