@@ -3,15 +3,28 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import ScreenA from '../screens/ScreenA';
 import ScreenB from '../screens/ScreenB';
 import CameraScreen from '../screens/Camera';
+import MyTabBar from '../components/organisms/CustomTabBar';
 
 const MainStackNavigator = createBottomTabNavigator();
 
 const MainNavigator = () => {
   return (
-    <MainStackNavigator.Navigator>
-      <MainStackNavigator.Screen name="Home" component={ScreenA} />
-      <MainStackNavigator.Screen name="Camera" component={CameraScreen} />
-      <MainStackNavigator.Screen name="Gallery" component={ScreenB} />
+    <MainStackNavigator.Navigator tabBar={props => <MyTabBar {...props} />}>
+      <MainStackNavigator.Screen
+        name="Home"
+        component={ScreenA}
+        options={{headerShown: false}}
+      />
+      <MainStackNavigator.Screen
+        name="Camera"
+        component={CameraScreen}
+        options={{headerShown: false}}
+      />
+      <MainStackNavigator.Screen
+        name="Gallery"
+        component={ScreenB}
+        options={{headerShown: false}}
+      />
     </MainStackNavigator.Navigator>
   );
 };
