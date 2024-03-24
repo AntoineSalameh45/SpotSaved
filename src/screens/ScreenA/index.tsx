@@ -1,27 +1,33 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, FlatList} from 'react-native';
+import {View, Text, Image, FlatList, Pressable} from 'react-native';
 import {
   CameraRoll,
   PhotoIdentifier,
 } from '@react-native-camera-roll/camera-roll';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import styles from '../../GlobalStyles';
 import {RootStackParamList} from '../../navigation/RootStackParamList';
+import imageGalleryStyles from './styles';
 
 interface Props {
-  route: RouteProp<RootStackParamList, 'Home'>; // Use RouteProp with your RootStackParamList
+  route: RouteProp<RootStackParamList, 'Home'>;
 }
 
 const ScreenA: React.FC<Props> = ({route}) => {
   const [albumPhotos, setAlbumPhotos] = useState<PhotoIdentifier[]>([]);
-  const capturedImage = route.params?.capturedImage; // Use optional chaining
+  const capturedImage = route.params?.capturedImage;
+  const navigation = useNavigation();
+
+  const openCamera = () => {
+    navigation.navigate('Camera');
+  };
 
   useEffect(() => {
     const fetchAlbumPhotos = async () => {
       try {
         const cameraRollPhotos = await CameraRoll.getPhotos({
           groupTypes: 'All',
-          first: 20, // Adjust the number of photos to fetch as needed
+          first: 20,
         });
         setAlbumPhotos(cameraRollPhotos.edges);
       } catch (error) {
@@ -34,24 +40,40 @@ const ScreenA: React.FC<Props> = ({route}) => {
 
   return (
     <View style={styles.viewContainer}>
-      <Text>Screen A</Text>
-      {capturedImage && (
-        <Image
-          source={{uri: capturedImage}}
-          style={{width: 200, height: 200}}
-        />
-      )}
-      <FlatList
-        data={albumPhotos}
-        renderItem={({item}) => (
-          <Image
-            source={{uri: item.node.image.uri}}
-            style={{width: 100, height: 100, margin: 5}}
-          />
+      <View style={imageGalleryStyles.sectionContainer}>
+        <Text style={imageGalleryStyles.sectionTitle}>Just Captured</Text>
+        {capturedImage ? (
+          <>
+            <Image
+              source={{uri: capturedImage}}
+              style={imageGalleryStyles.newImage}
+            />
+          </>
+        ) : (
+          <Pressable onPress={openCamera}>
+            <Text style={imageGalleryStyles.captureText}>
+              Capture a moment!
+            </Text>
+          </Pressable>
         )}
-        keyExtractor={(item, index) => index.toString()}
-        horizontal={true}
-      />
+      </View>
+
+      <View style={imageGalleryStyles.sectionContainer}>
+        <Text style={imageGalleryStyles.sectionTitle}>
+          Browse your SpotGallery
+        </Text>
+        <FlatList
+          data={albumPhotos}
+          renderItem={({item}) => (
+            <Image
+              source={{uri: item.node.image.uri}}
+              style={imageGalleryStyles.photoAlbum}
+            />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal={true}
+        />
+      </View>
     </View>
   );
 };
