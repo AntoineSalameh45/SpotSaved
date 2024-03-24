@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {View, FlatList, ActivityIndicator, Text} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from '../../GlobalStyles';
 import CharacterListItem from '../../components/organisms/CharacterListItem';
 
@@ -12,6 +12,10 @@ const ScreenB = () => {
   );
 
   const fetchNextPage = async () => {
+    if (loading) {
+      return;
+    }
+    console.log('Fetching: ', nextPage);
     setLoading(true);
     const response = await fetch(nextPage);
     const responseJson = await response.json();
@@ -33,16 +37,9 @@ const ScreenB = () => {
       <FlatList
         data={items}
         renderItem={data => <CharacterListItem character={data.item} />}
-        ListFooterComponent={() => (
-          <View>
-            {loading && <ActivityIndicator />}
-            <Text
-              style={{alignSelf: 'center', fontSize: 20, color: '#fff'}}
-              onPress={fetchNextPage}>
-              Load More
-            </Text>
-          </View>
-        )}
+        onEndReached={fetchNextPage}
+        onEndReachedThreshold={3}
+        ListFooterComponent={() => loading && <ActivityIndicator />}
       />
     </View>
   );
