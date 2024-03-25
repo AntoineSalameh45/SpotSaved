@@ -30,7 +30,8 @@ const imageGalleryStyles = StyleSheet.create({
   },
   captureText: {
     color: '#FFBA00',
-    margin: 20,
+    marginVertical: 20,
+    alignSelf: 'center',
   },
   mapContainer: {
     height: 300,

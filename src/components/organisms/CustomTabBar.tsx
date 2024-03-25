@@ -71,7 +71,12 @@ const MyTabBar = ({
 };
 
 const tabStyles = {
-  tabContainer: {flexDirection: 'row', backgroundColor: '#0C3B2E'},
+  tabContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#0C3B2E',
+    borderTopWidth: 2,
+    borderTopColor: '#BB8A52',
+  },
   tabButton: {
     flex: 1,
   } as ViewStyle,

@@ -91,7 +91,7 @@ const AlbumGallery: React.FC<Props> = () => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          contentContainerStyle={{paddingHorizontal: 10}}
+          contentContainerStyle={{paddingHorizontal: 8}}
         />
       </View>
     </View>

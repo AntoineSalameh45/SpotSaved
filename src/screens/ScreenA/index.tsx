@@ -55,7 +55,9 @@ const ScreenA: React.FC<Props> = ({route}) => {
     <View style={styles.viewContainer}>
       <ScrollView>
         <View style={imageGalleryStyles.sectionContainer}>
-          <Text style={imageGalleryStyles.sectionTitle}>Just Captured</Text>
+          <Text style={imageGalleryStyles.sectionTitle}>
+            What are you waiting for?
+          </Text>
           {capturedImage ? (
             <>
               <Image
@@ -66,7 +68,7 @@ const ScreenA: React.FC<Props> = ({route}) => {
           ) : (
             <Pressable onPress={openCamera}>
               <Text style={imageGalleryStyles.captureText}>
-                Capture a moment!
+                Capture the moment!
               </Text>
             </Pressable>
           )}

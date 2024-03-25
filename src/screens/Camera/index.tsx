@@ -93,14 +93,14 @@ const CameraScreen: React.FC<Props> = ({navigation}) => {
             style: 'cancel',
             text: 'cancel',
             onPress: () => {
-              setCapturedImage(null);
+              setCapturedImage(capturedImage);
               openCamera();
             },
           },
           {
             text: 'See Photos',
             onPress: () => {
-              navigation.navigate('Gallery', {capturedImage});
+              navigation.navigate('Gallery');
             },
           },
         ]);
