@@ -86,6 +86,8 @@ const ScreenA: React.FC<Props> = ({route}) => {
             region={{
               latitude: 33.88863,
               longitude: 35.49548,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.06,
             }}
           />
         </View>
