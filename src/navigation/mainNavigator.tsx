@@ -2,7 +2,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {RootStackParamList} from './RootStackParamList';
 import ScreenA from '../screens/ScreenA';
-import ScreenB from '../screens/ScreenB';
+import ApiScreen from '../screens/ApiScreen';
 import CameraScreen from '../screens/Camera';
 import MyTabBar from '../components/organisms/CustomTabBar';
 import AlbumGallery from '../screens/AlbumGallery';
@@ -24,7 +24,7 @@ const MainNavigator = () => {
       />
       <MainStackNavigator.Screen
         name="Api"
-        component={ScreenB}
+        component={ApiScreen}
         options={{headerShown: false}}
       />
       <MainStackNavigator.Screen

@@ -69,7 +69,7 @@ const AlbumGallery: React.FC<Props> = () => {
         onEndReached={loadMorePhotos}
         onEndReachedThreshold={0.5}
         ListFooterComponent={loading ? <ActivityIndicator /> : null}
-        horizontal={false} // Change to true if you want horizontal scrolling
+        horizontal={false}
       />
     </View>
   );

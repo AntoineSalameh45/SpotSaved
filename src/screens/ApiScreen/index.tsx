@@ -4,7 +4,7 @@ import CharacterListItem from '../../components/organisms/CharacterListItem';
 
 const initialPage = 'https://rickandmortyapi.com/api/character';
 
-const ScreenB = () => {
+const ApiScreen = () => {
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState([]);
   const [nextPage, setNextPage] = useState('');
@@ -77,4 +77,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScreenB;
+export default ApiScreen;
