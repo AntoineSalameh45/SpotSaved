@@ -15,16 +15,27 @@ const imageGalleryStyles = StyleSheet.create({
     backgroundColor: '#0C3B2E',
     paddingHorizontal: 10,
     paddingVertical: 20,
-    marginTop: 20,
+    marginVertical: 20,
   },
   sectionTitle: {
     color: '#FFBA00',
     fontSize: 18,
     marginBottom: 10,
   },
+  sectionTitleMap: {
+    color: '#FFBA00',
+    fontSize: 18,
+    marginBottom: 10,
+    alignSelf: 'center',
+  },
   captureText: {
     color: '#FFBA00',
     margin: 20,
+  },
+  mapContainer: {
+    height: 300,
+    width: 300,
+    alignSelf: 'center',
   },
 });
 export default imageGalleryStyles;
