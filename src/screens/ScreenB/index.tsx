@@ -2,20 +2,19 @@ import {View, FlatList, ActivityIndicator, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import CharacterListItem from '../../components/organisms/CharacterListItem';
 
+const initialPage = 'https://rickandmortyapi.com/api/character';
+
 const ScreenB = () => {
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState([]);
-  const [nextPage, setNextPage] = useState(
-    'https://rickandmortyapi.com/api/character',
-  );
+  const [nextPage, setNextPage] = useState('');
 
-  const fetchNextPage = async () => {
+  const fetchPage = async (url: string) => {
     if (loading) {
       return;
     }
-    console.log('Fetching: ', nextPage);
     setLoading(true);
-    const response = await fetch(nextPage);
+    const response = await fetch(url);
     const responseJson = await response.json();
 
     setItems(existingItems => {
@@ -26,8 +25,14 @@ const ScreenB = () => {
 
     setLoading(false);
   };
+
+  const onRefresh = () => {
+    setItems([]);
+    setNextPage(initialPage);
+    fetchPage(initialPage);
+  };
   useEffect(() => {
-    fetchNextPage();
+    fetchPage(initialPage);
   }, []);
 
   const renderCharacterItem = ({item, index}: {item: any; index: number}) => {
@@ -49,9 +54,11 @@ const ScreenB = () => {
       <FlatList
         data={items}
         renderItem={renderCharacterItem}
-        onEndReached={fetchNextPage}
+        onEndReached={() => fetchPage(nextPage)}
         onEndReachedThreshold={3}
         ListFooterComponent={() => loading && <ActivityIndicator />}
+        refreshing={loading}
+        onRefresh={onRefresh}
       />
     </View>
   );
