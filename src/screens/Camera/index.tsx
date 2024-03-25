@@ -100,7 +100,7 @@ const CameraScreen: React.FC<Props> = ({navigation}) => {
           {
             text: 'See Photos',
             onPress: () => {
-              navigation.navigate('Home', {capturedImage});
+              navigation.navigate('Gallery', {capturedImage});
             },
           },
         ]);
