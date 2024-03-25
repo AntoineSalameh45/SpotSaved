@@ -5,13 +5,17 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  Dimensions,
 } from 'react-native';
 import {
   PhotoIdentifier,
   CameraRoll,
 } from '@react-native-camera-roll/camera-roll';
-import imageGalleryStyles from './styles';
 import styles from '../../GlobalStyles';
+import albumGalleryStyles from './styles';
+
+const {width} = Dimensions.get('window');
+const imageWidth = (width - 20) / 3;
 
 interface Props {}
 
@@ -26,7 +30,7 @@ const AlbumGallery: React.FC<Props> = () => {
       setLoading(true);
       const cameraRollPhotos = await CameraRoll.getPhotos({
         groupTypes: 'All',
-        first: 10,
+        first: 21,
         after,
       });
       setAlbumPhotos(existingPhotos => [
@@ -42,7 +46,7 @@ const AlbumGallery: React.FC<Props> = () => {
       console.error('Error fetching photos:', error);
     } finally {
       setLoading(false);
-      setRefreshing(false); // Set refreshing to false after fetch completes
+      setRefreshing(false);
     }
   };
 
@@ -57,34 +61,39 @@ const AlbumGallery: React.FC<Props> = () => {
   };
 
   const onRefresh = () => {
-    setAlbumPhotos([]); // Clear existing photos
-    setNextPage(null); // Reset next page cursor
-    setRefreshing(true); // Set refreshing to true
-    fetchAlbumPhotos(); // Fetch photos again
+    setAlbumPhotos([]);
+    setNextPage(null);
+    setRefreshing(true);
+    fetchAlbumPhotos();
   };
 
   const renderPhotoItem = ({item}: {item: PhotoIdentifier}) => (
-    <Image
-      source={{uri: item.node.image.uri}}
-      style={imageGalleryStyles.photoAlbum}
-    />
+    <View style={albumGalleryStyles.rowContainer}>
+      <Image
+        source={{uri: item.node.image.uri}}
+        style={{width: imageWidth, height: imageWidth + 50}}
+      />
+    </View>
   );
 
   return (
     <View style={styles.viewContainer}>
-      <FlatList
-        data={albumPhotos}
-        renderItem={renderPhotoItem}
-        keyExtractor={(item, index) => index.toString()}
-        onEndReached={loadMorePhotos}
-        onEndReachedThreshold={3}
-        ListFooterComponent={loading ? <ActivityIndicator /> : null}
-        horizontal={false}
-        refreshControl={
-          // Add RefreshControl component
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
+      <View style={albumGalleryStyles.viewContainer}>
+        <FlatList
+          data={albumPhotos}
+          renderItem={renderPhotoItem}
+          keyExtractor={(item, index) => index.toString()}
+          onEndReached={loadMorePhotos}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={loading ? <ActivityIndicator /> : null}
+          horizontal={false}
+          numColumns={3}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          contentContainerStyle={{paddingHorizontal: 10}}
+        />
+      </View>
     </View>
   );
 };
