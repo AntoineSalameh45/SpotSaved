@@ -23,12 +23,24 @@ const ScreenA: React.FC<Props> = ({route}) => {
     navigation.navigate('Camera');
   };
 
+  const viewMoreImages = () => {
+    navigation.navigate('Gallery');
+  };
+  const renderPhotoItem = ({item}: {item: PhotoIdentifier}) => (
+    <Image
+      source={{uri: item.node.image.uri}}
+      style={imageGalleryStyles.photoAlbum}
+    />
+  );
+
+  const keyExtractor = (item: any, index: number) => index.toString();
+
   useEffect(() => {
     const fetchAlbumPhotos = async () => {
       try {
         const cameraRollPhotos = await CameraRoll.getPhotos({
           groupTypes: 'All',
-          first: 20,
+          first: 10,
         });
         setAlbumPhotos(cameraRollPhotos.edges);
       } catch (error) {
@@ -66,16 +78,21 @@ const ScreenA: React.FC<Props> = ({route}) => {
           </Text>
           <FlatList
             data={albumPhotos}
-            renderItem={({item}) => (
-              <Image
-                source={{uri: item.node.image.uri}}
-                style={imageGalleryStyles.photoAlbum}
-              />
-            )}
-            keyExtractor={(item, index) => index.toString()}
+            renderItem={renderPhotoItem}
+            keyExtractor={keyExtractor}
             horizontal={true}
+            ListFooterComponent={() => (
+              <Pressable
+                onPress={viewMoreImages}
+                style={imageGalleryStyles.viewMoreTextContainer}>
+                <Text style={imageGalleryStyles.viewMoreText}>
+                  View More Images &gt;
+                </Text>
+              </Pressable>
+            )}
           />
         </View>
+
         <View style={imageGalleryStyles.sectionContainer}>
           <Text style={imageGalleryStyles.sectionTitleMap}>
             Your Saved Spots

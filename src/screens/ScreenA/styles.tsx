@@ -37,5 +37,16 @@ const imageGalleryStyles = StyleSheet.create({
     width: 300,
     alignSelf: 'center',
   },
+  viewMoreText: {
+    color: '#FFBA00',
+  },
+  viewMoreTextContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 100,
+    width: 100,
+    margin: 5,
+    backgroundColor: '#6D977342',
+  },
 });
 export default imageGalleryStyles;
