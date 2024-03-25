@@ -77,6 +77,7 @@ const CameraScreen: React.FC<Props> = ({navigation}) => {
     } else {
       console.error('Failed to capture photo');
     }
+    console.log(takePhoto);
   };
 
   const toggleCameraDevice = () => {
@@ -86,20 +87,24 @@ const CameraScreen: React.FC<Props> = ({navigation}) => {
 
   const saveImage = async () => {
     try {
-      const savedImage = await CameraRoll.save(capturedImage!, {type: 'photo'});
+      const savedImage = await CameraRoll.saveAsset(capturedImage!, {
+        type: 'photo',
+      });
       if (savedImage) {
         Alert.alert('Success', 'Photo saved successfully', [
           {
             style: 'cancel',
             text: 'cancel',
             onPress: () => {
-              setCapturedImage(capturedImage);
+              setCapturedImage('');
               openCamera();
             },
           },
           {
             text: 'See Photos',
             onPress: () => {
+              openCamera();
+              setCapturedImage('');
               navigation.navigate('Gallery');
             },
           },

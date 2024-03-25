@@ -9,6 +9,7 @@ import styles from '../../GlobalStyles';
 import {RootStackParamList} from '../../navigation/RootStackParamList';
 import imageGalleryStyles from './styles';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import GetCurrentLocation from '../../components/atoms/getCurrentLocation';
 
 interface Props {
   route: RouteProp<RootStackParamList, 'Home'>;
@@ -99,8 +100,10 @@ const ScreenA: React.FC<Props> = ({route}) => {
           <Text style={imageGalleryStyles.sectionTitleMap}>
             Your Saved Spots
           </Text>
+          <GetCurrentLocation />
           <MapView
             provider={PROVIDER_GOOGLE}
+            showsUserLocation
             style={imageGalleryStyles.mapContainer}
             region={{
               latitude: 33.88863,
