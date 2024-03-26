@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, FlatList, Image, RefreshControl, Text} from 'react-native';
+import {
+  View,
+  FlatList,
+  Image,
+  RefreshControl,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import axios from 'axios';
 import apiStyles from './styles';
 
@@ -29,16 +36,29 @@ const PhotoList = () => {
     fetchData();
   };
 
+  const handleImagePress = (
+    latitude: number,
+    longitude: number,
+    url: string,
+  ) => {
+    Alert.alert(
+      'Details:',
+      `Path: \n${url}\n\nCoordinates:\nLatitude: ${latitude}\nLongitude: ${longitude}`,
+    );
+  };
+
   const renderItem = ({item}: any) => (
-    <View style={apiStyles.item}>
+    <TouchableOpacity
+      style={apiStyles.item}
+      onPress={() =>
+        handleImagePress(
+          item.location.latitude,
+          item.location.longitude,
+          item.url,
+        )
+      }>
       <Image source={{uri: `file://${item.url}`}} style={apiStyles.image} />
-      <Text style={apiStyles.coordText}>
-        Lattitude {item.location.latitude}
-      </Text>
-      <Text style={apiStyles.coordText}>
-        Longitude {item.location.longitude}
-      </Text>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

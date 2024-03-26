@@ -5,25 +5,16 @@ const apiStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#6D9773',
   },
-  rowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 5,
-    marginHorizontal: 10,
-    columnGap: 10,
-  },
-  coordText: {fontSize: 16, color: '#FFBA00'},
   item: {
     backgroundColor: '#0C3B2E',
-    padding: 20,
+    padding: 0,
     marginVertical: 8,
-    marginHorizontal: 16,
-    width: '90%',
+    width: '100%',
     height: 300,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: '100%',
+    height: 300,
   },
 });
 export default apiStyles;
