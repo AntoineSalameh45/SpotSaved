@@ -16,5 +16,16 @@ const apiStyles = StyleSheet.create({
     width: '100%',
     height: 300,
   },
+  mapContainer: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 1,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    zIndex: 2,
+  },
 });
 export default apiStyles;

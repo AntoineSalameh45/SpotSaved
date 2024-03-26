@@ -1,10 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, FlatList, Pressable, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  Pressable,
+  ScrollView,
+  Animated,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import styles from '../../GlobalStyles';
 import imageGalleryStyles from './styles';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 import axios from 'axios';
+import CameraSvg from '../../assets/CameraSvg.svg';
 
 const Home = () => {
   const [albumPhotos, setAlbumPhotos] = useState([]);
@@ -40,19 +50,43 @@ const Home = () => {
     />
   );
 
+  const renderRightSwipeAction = dragX => {
+    const trans = dragX.interpolate({
+      inputRange: [-500, 0],
+      outputRange: [0.5, 1], // Adjust the scaling as needed
+      extrapolate: 'clamp',
+    });
+    return (
+      <Animated.View
+        style={[
+          imageGalleryStyles.rightSwipeAction,
+          {transform: [{scaleX: trans}]},
+        ]}>
+        <Text>&gt;&gt;&gt; Swipe Back Right</Text>
+        <CameraSvg height={50} width={50} />
+      </Animated.View>
+    );
+  };
+
   return (
     <View style={styles.viewContainer}>
       <ScrollView>
-        <View style={imageGalleryStyles.sectionContainer}>
-          <Text style={imageGalleryStyles.sectionTitle}>
-            What are you waiting for?
-          </Text>
-          <Pressable onPress={openCamera}>
-            <Text style={imageGalleryStyles.captureText}>
-              Capture the moment!
-            </Text>
-          </Pressable>
-        </View>
+        <Swipeable
+          renderRightActions={renderRightSwipeAction}
+          onSwipeableOpen={(event, gestureState, swipeable) => {
+            openCamera();
+          }}>
+          <View style={imageGalleryStyles.sectionContainer}>
+            <View>
+              <Text style={imageGalleryStyles.sectionTitle}>
+                What are you waiting for?{'\n'}Capture the moment!
+              </Text>
+              <Text style={imageGalleryStyles.captureText}>
+                &lt;&lt;&lt; Swipe left
+              </Text>
+            </View>
+          </View>
+        </Swipeable>
 
         <View style={imageGalleryStyles.sectionContainer}>
           <Text style={imageGalleryStyles.sectionTitle}>

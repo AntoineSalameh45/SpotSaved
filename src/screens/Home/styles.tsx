@@ -31,7 +31,8 @@ const imageGalleryStyles = StyleSheet.create({
   captureText: {
     color: '#FFBA00',
     marginVertical: 20,
-    alignSelf: 'center',
+    marginRight: 35,
+    alignSelf: 'flex-end',
   },
   mapContainer: {
     height: 300,
@@ -48,6 +49,14 @@ const imageGalleryStyles = StyleSheet.create({
     width: 100,
     margin: 5,
     backgroundColor: '#6D977342',
+  },
+  rightSwipeAction: {
+    backgroundColor: '#6D9773',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    flexDirection: 'row',
+    width: '90%',
   },
 });
 export default imageGalleryStyles;

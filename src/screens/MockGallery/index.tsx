@@ -11,7 +11,12 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import MapView, {Marker} from 'react-native-maps';
-import apiStyles from './styles'; // Import your styles from the appropriate file
+import apiStyles from './styles';
+import Animated, {
+  useSharedValue,
+  withSpring,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
 interface Photo {
   id: number;
@@ -29,6 +34,8 @@ const PhotoList = () => {
     latitude: number;
     longitude: number;
   } | null>(null);
+
+  const translateY = useSharedValue(0);
 
   const fetchData = async () => {
     try {
@@ -58,6 +65,9 @@ const PhotoList = () => {
     url: string,
   ) => {
     setSelectedLocation({latitude, longitude});
+
+    translateY.value = 0;
+
     Alert.alert(
       'Details:',
       `Path: \n${url}\n\nCoordinates:\nLatitude: ${latitude}\nLongitude: ${longitude}`,
@@ -89,9 +99,21 @@ const PhotoList = () => {
       <Image source={{uri: `file://${item.url}`}} style={apiStyles.image} />
     </TouchableOpacity>
   );
+
   const handleCloseMap = () => {
-    setSelectedLocation(null);
+    translateY.value = withSpring(-700);
+
+    setTimeout(() => {
+      translateY.value = withSpring(0);
+      setSelectedLocation(null);
+    }, 500);
   };
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{translateY: translateY.value}],
+    };
+  });
 
   return (
     <View style={apiStyles.viewContainer}>
@@ -105,22 +127,26 @@ const PhotoList = () => {
       />
       {selectedLocation && (
         <>
-          <MapView
-            style={StyleSheet.absoluteFillObject}
-            initialRegion={{
-              latitude: selectedLocation.latitude,
-              longitude: selectedLocation.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}>
-            <Marker
-              coordinate={{
+          <Animated.View style={[apiStyles.mapContainer, animatedStyle]}>
+            <MapView
+              style={StyleSheet.absoluteFillObject}
+              initialRegion={{
                 latitude: selectedLocation.latitude,
                 longitude: selectedLocation.longitude,
-              }}
-            />
-          </MapView>
-          <Button title="Close Map" onPress={handleCloseMap} />
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}>
+              <Marker
+                coordinate={{
+                  latitude: selectedLocation.latitude,
+                  longitude: selectedLocation.longitude,
+                }}
+              />
+            </MapView>
+          </Animated.View>
+          <Animated.View style={[apiStyles.buttonContainer, animatedStyle]}>
+            <Button title="Close Map" onPress={handleCloseMap} />
+          </Animated.View>
         </>
       )}
     </View>
