@@ -66,7 +66,6 @@ const AlbumGallery: React.FC<Props> = () => {
     setRefreshing(true);
     fetchAlbumPhotos();
   };
-
   const renderPhotoItem = ({item}: {item: PhotoIdentifier}) => (
     <View style={albumGalleryStyles.rowContainer}>
       <Image
