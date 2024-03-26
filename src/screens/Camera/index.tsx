@@ -30,6 +30,7 @@ const CameraScreen = ({navigation}: any) => {
   const [isCameraVisible, setIsCameraVisible] = useState(false);
   const [photo, setPhoto] = useState<PhotoFile>();
   const [location, setLocation] = useState({});
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
   useEffect(() => {
     getLocation();
@@ -94,6 +95,7 @@ const CameraScreen = ({navigation}: any) => {
       console.warn(err);
     }
   };
+
   const getLocation = () => {
     Geolocation.getCurrentPosition(
       (position: any) => {
@@ -108,16 +110,23 @@ const CameraScreen = ({navigation}: any) => {
       {enableHighAccuracy: true},
     );
   };
+
   const takePhoto = async () => {
     const photo = await camera.current?.takePhoto();
-    setPhoto(photo);
-    closeCamera();
+
+    if (photo && photo.path) {
+      setCapturedImage(`file://${photo.path}`);
+      setPhoto(photo);
+      closeCamera();
+    } else {
+      console.error('Failed to capture photo');
+    }
   };
 
   const savePhotoToStorage = async (photo: PhotoFile) => {
     try {
       await AsyncStorage.setItem('capturedPhoto', JSON.stringify(photo));
-      console.log('succeed : ', photo);
+      console.log('Photo saved to AsyncStorage:', photo);
     } catch (error) {
       console.error('Error saving photo to AsyncStorage:', error);
     }
@@ -128,12 +137,17 @@ const CameraScreen = ({navigation}: any) => {
       if (!photo) {
         throw new Error('No photo to send');
       }
+
+      // Save photo to AsyncStorage
       savePhotoToStorage(photo);
+
+      // Prepare data to send to API
       const data = {
         url: photo.path,
         location: location,
       };
 
+      // Post data to API
       const response = await axios.post(
         'https://660296d89d7276a75553a45b.mockapi.io/api/img/photo',
         data,
@@ -144,9 +158,9 @@ const CameraScreen = ({navigation}: any) => {
         },
       );
 
-      console.log(JSON.stringify(data));
       console.log('Data posted successfully:', response.data);
 
+      // Save to camera roll
       await CameraRoll.saveAsset(photo.path);
 
       navigation.navigate('Mock Gallery');
@@ -154,6 +168,7 @@ const CameraScreen = ({navigation}: any) => {
       console.error('Error posting data:', error);
     }
   };
+
   if (device === null) {
     return (
       <View style={camStyles.mainView}>
@@ -164,15 +179,18 @@ const CameraScreen = ({navigation}: any) => {
 
   return (
     <SafeAreaView style={camStyles.mainView}>
-      {photo ? (
+      {capturedImage ? (
         <>
           <View style={camStyles.capturedImageContainer}>
-            <Image source={{uri: photo.path}} style={camStyles.capturedImage} />
+            <Image
+              source={{uri: capturedImage}}
+              style={camStyles.capturedImage}
+            />
           </View>
           <View style={camStyles.capturedButtonsContainer}>
             <Pressable
               onPress={() => {
-                setPhoto(null);
+                setCapturedImage(null);
                 openCamera();
               }}>
               <Discard width={30} height={30} />
