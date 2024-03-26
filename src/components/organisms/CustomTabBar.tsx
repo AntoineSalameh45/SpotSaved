@@ -1,5 +1,12 @@
 import React, {PropsWithChildren} from 'react';
-import {View, Text, TouchableOpacity, ViewStyle, TextStyle} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+  TextStyle,
+  StyleSheet,
+} from 'react-native';
 
 interface TabBarProps {
   state: any;
@@ -70,7 +77,9 @@ const MyTabBar = ({
   );
 };
 
-const tabStyles = {
+export default MyTabBar;
+
+const tabStyles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
     backgroundColor: '#0C3B2E',
@@ -84,6 +93,4 @@ const tabStyles = {
     textAlign: 'center',
     padding: 16,
   } as TextStyle,
-};
-
-export default MyTabBar;
+});
