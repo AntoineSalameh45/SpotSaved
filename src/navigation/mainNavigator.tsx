@@ -5,7 +5,7 @@ import Home from '../screens/Home';
 import CameraScreen from '../screens/Camera';
 import MyTabBar from '../components/organisms/CustomTabBar';
 import AlbumGallery from '../screens/AlbumGallery';
-import PhotoList from '../screens/ApiScreen2';
+import PhotoList from '../screens/MockGallery';
 
 const MainStackNavigator = createBottomTabNavigator<RootStackParamList>();
 

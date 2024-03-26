@@ -1,13 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  Pressable,
-  ScrollView,
-  RefreshControl,
-} from 'react-native';
+import {View, Text, Image, FlatList, Pressable, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import styles from '../../GlobalStyles';
 import imageGalleryStyles from './styles';
@@ -17,7 +9,6 @@ import axios from 'axios';
 const Home = () => {
   const [albumPhotos, setAlbumPhotos] = useState([]);
   const navigation = useNavigation();
-  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     const fetchAlbumPhotos = async () => {
@@ -48,11 +39,6 @@ const Home = () => {
       style={imageGalleryStyles.photoAlbum}
     />
   );
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    fetchData();
-  };
 
   return (
     <View style={styles.viewContainer}>
@@ -86,9 +72,6 @@ const Home = () => {
                 </Text>
               </Pressable>
             )}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
           />
         </View>
 
