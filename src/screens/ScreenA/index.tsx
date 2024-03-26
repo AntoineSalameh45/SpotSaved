@@ -1,49 +1,31 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, FlatList, Pressable, ScrollView} from 'react-native';
 import {
-  CameraRoll,
-  PhotoIdentifier,
-} from '@react-native-camera-roll/camera-roll';
-import {RouteProp, useNavigation} from '@react-navigation/native';
+  View,
+  Text,
+  Image,
+  FlatList,
+  Pressable,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import styles from '../../GlobalStyles';
-import {RootStackParamList} from '../../navigation/RootStackParamList';
 import imageGalleryStyles from './styles';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import GetCurrentLocation from '../../components/atoms/getCurrentLocation';
+import axios from 'axios';
 
-interface Props {
-  route: RouteProp<RootStackParamList, 'Home'>;
-}
-
-const ScreenA: React.FC<Props> = ({route}) => {
-  const [albumPhotos, setAlbumPhotos] = useState<PhotoIdentifier[]>([]);
-  const capturedImage = route.params?.capturedImage;
+const ScreenA = () => {
+  const [albumPhotos, setAlbumPhotos] = useState([]);
   const navigation = useNavigation();
-
-  const openCamera = () => {
-    navigation.navigate('Camera');
-  };
-
-  const viewMoreImages = () => {
-    navigation.navigate('Gallery');
-  };
-  const renderPhotoItem = ({item}: {item: PhotoIdentifier}) => (
-    <Image
-      source={{uri: item.node.image.uri}}
-      style={imageGalleryStyles.photoAlbum}
-    />
-  );
-
-  const keyExtractor = (item: any, index: number) => index.toString();
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     const fetchAlbumPhotos = async () => {
       try {
-        const cameraRollPhotos = await CameraRoll.getPhotos({
-          groupTypes: 'All',
-          first: 10,
-        });
-        setAlbumPhotos(cameraRollPhotos.edges);
+        const response = await axios.get(
+          'https://660296d89d7276a75553a45b.mockapi.io/api/img/photo',
+        );
+        setAlbumPhotos(response.data.reverse());
       } catch (error) {
         console.error('Error fetching photos:', error);
       }
@@ -52,6 +34,26 @@ const ScreenA: React.FC<Props> = ({route}) => {
     fetchAlbumPhotos();
   }, []);
 
+  const openCamera = () => {
+    navigation.navigate('Camera');
+  };
+
+  const viewMoreImages = () => {
+    navigation.navigate('Mock Gallery');
+  };
+
+  const renderPhotoItem = ({item}) => (
+    <Image
+      source={{uri: `file://${item.url}`}}
+      style={imageGalleryStyles.photoAlbum}
+    />
+  );
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
   return (
     <View style={styles.viewContainer}>
       <ScrollView>
@@ -59,20 +61,11 @@ const ScreenA: React.FC<Props> = ({route}) => {
           <Text style={imageGalleryStyles.sectionTitle}>
             What are you waiting for?
           </Text>
-          {capturedImage ? (
-            <>
-              <Image
-                source={{uri: capturedImage}}
-                style={imageGalleryStyles.newImage}
-              />
-            </>
-          ) : (
-            <Pressable onPress={openCamera}>
-              <Text style={imageGalleryStyles.captureText}>
-                Capture the moment!
-              </Text>
-            </Pressable>
-          )}
+          <Pressable onPress={openCamera}>
+            <Text style={imageGalleryStyles.captureText}>
+              Capture the moment!
+            </Text>
+          </Pressable>
         </View>
 
         <View style={imageGalleryStyles.sectionContainer}>
@@ -82,7 +75,7 @@ const ScreenA: React.FC<Props> = ({route}) => {
           <FlatList
             data={albumPhotos}
             renderItem={renderPhotoItem}
-            keyExtractor={keyExtractor}
+            keyExtractor={item => item.id.toString()}
             horizontal={true}
             ListFooterComponent={() => (
               <Pressable
@@ -93,6 +86,9 @@ const ScreenA: React.FC<Props> = ({route}) => {
                 </Text>
               </Pressable>
             )}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           />
         </View>
 
@@ -100,7 +96,6 @@ const ScreenA: React.FC<Props> = ({route}) => {
           <Text style={imageGalleryStyles.sectionTitleMap}>
             Your Saved Spots
           </Text>
-          <GetCurrentLocation />
           <MapView
             provider={PROVIDER_GOOGLE}
             showsUserLocation

@@ -1,13 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  FlatList,
-  Image,
-  StyleSheet,
-  RefreshControl,
-  Text,
-} from 'react-native';
+import {View, FlatList, Image, RefreshControl, Text} from 'react-native';
 import axios from 'axios';
+import apiStyles from './styles';
 
 const PhotoList = () => {
   const [photos, setPhotos] = useState([]);
@@ -36,19 +30,19 @@ const PhotoList = () => {
   };
 
   const renderItem = ({item}: any) => (
-    <View style={styles.item}>
-      <Image source={{uri: `file://${item.url}`}} style={styles.image} />
-      <Text style={{fontSize: 16, color: '#000'}}>
+    <View style={apiStyles.item}>
+      <Image source={{uri: `file://${item.url}`}} style={apiStyles.image} />
+      <Text style={apiStyles.coordText}>
         Lattitude {item.location.latitude}
       </Text>
-      <Text style={{fontSize: 16, color: '#000'}}>
+      <Text style={apiStyles.coordText}>
         Longitude {item.location.longitude}
       </Text>
     </View>
   );
 
   return (
-    <View style={styles.container}>
+    <View style={apiStyles.viewContainer}>
       <FlatList
         data={photos}
         renderItem={renderItem}
@@ -60,24 +54,5 @@ const PhotoList = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    width: '90%',
-    height: 300,
-  },
-  image: {
-    width: 200,
-    height: 200,
-  },
-});
 
 export default PhotoList;
