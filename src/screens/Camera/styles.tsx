@@ -38,5 +38,26 @@ const camStyles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 30,
   },
+  cameraButtons: {
+    position: 'absolute',
+    top: 10,
+    zIndex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '90%',
+  },
+  errorText: {
+    fontSize: 20,
+    color: 'red',
+  },
+  capturedImage: {
+    width: '100%',
+    height: '100%',
+  },
+  captureButtonContainer: {
+    position: 'absolute',
+    bottom: 100,
+  },
 });
 export default camStyles;

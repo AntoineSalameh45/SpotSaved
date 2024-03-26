@@ -5,14 +5,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#6D9773',
   },
-  cameraButtons: {
-    position: 'absolute',
-    top: 10,
-    zIndex: 1,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '90%',
-  },
 });
 export default styles;

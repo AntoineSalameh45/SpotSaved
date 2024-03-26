@@ -1,36 +1,44 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Pressable,
   Alert,
-  Linking,
   Image,
   PermissionsAndroid,
+  Linking,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {Camera, useCameraDevice} from 'react-native-vision-camera';
-import {CameraRoll} from '@react-native-camera-roll/camera-roll';
-import styles from '../../GlobalStyles';
+import {Camera, useCameraDevice, PhotoFile} from 'react-native-vision-camera';
 import camStyles from './styles';
 import CamFlip from '../../assets/CameraFlipSvg.svg';
 import Close from '../../assets/CloseSvg.svg';
 import CameraSvg from '../../assets/CameraSvg.svg';
 import SaveSvg from '../../assets/SaveSvg.svg';
 import Discard from '../../assets/DiscardSvg.svg';
+import {CameraRoll} from '@react-native-camera-roll/camera-roll';
+import Geolocation from '@react-native-community/geolocation';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface Props {
-  navigation: any;
-}
-
-const CameraScreen: React.FC<Props> = ({navigation}) => {
+const CameraScreen = ({navigation}: any) => {
   const [cameraDevice, setCameraDevice] = useState<'back' | 'front'>('back');
   const device = useCameraDevice(cameraDevice);
   const camera = useRef<Camera>(null);
 
   const [isCameraVisible, setIsCameraVisible] = useState(false);
-  const [capturedImage, setCapturedImage] = useState<null | string>(null);
+  const [photo, setPhoto] = useState<PhotoFile>();
+  const [location, setLocation] = useState({});
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  const toggleCameraDevice = () => {
+    const newDevice = cameraDevice === 'back' ? 'front' : 'back';
+    setCameraDevice(newDevice);
+  };
 
   const openCamera = async () => {
     const granted = await PermissionsAndroid.request(
@@ -50,10 +58,7 @@ const CameraScreen: React.FC<Props> = ({navigation}) => {
         'Permission required',
         'Open settings to grant camera permission',
         [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
+          {text: 'Cancel', style: 'cancel'},
           {
             text: 'Open settings',
             style: 'default',
@@ -68,83 +73,106 @@ const CameraScreen: React.FC<Props> = ({navigation}) => {
 
   const closeCamera = () => setIsCameraVisible(false);
 
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message: 'App needs access to your location ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the Location');
+      } else {
+        console.log('Location permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+  const getLocation = () => {
+    Geolocation.getCurrentPosition(
+      (position: any) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error: {message: any}) => {
+        console.error('Error getting location:', error.message);
+      },
+      {enableHighAccuracy: true},
+    );
+  };
   const takePhoto = async () => {
     const photo = await camera.current?.takePhoto();
-
-    if (photo && photo.path) {
-      setCapturedImage(`file://${photo.path}`);
-      closeCamera();
-    } else {
-      console.error('Failed to capture photo');
-    }
-    console.log(takePhoto);
+    setPhoto(photo);
+    closeCamera();
   };
 
-  const toggleCameraDevice = () => {
-    const newDevice = cameraDevice === 'back' ? 'front' : 'back';
-    setCameraDevice(newDevice);
+  const savePhotoToStorage = async (photo: PhotoFile) => {
+    try {
+      await AsyncStorage.setItem('capturedPhoto', JSON.stringify(photo));
+      console.log('succeed : ', photo);
+    } catch (error) {
+      console.error('Error saving photo to AsyncStorage:', error);
+    }
   };
 
   const saveImage = async () => {
     try {
-      const savedImage = await CameraRoll.saveAsset(capturedImage!, {
-        type: 'photo',
-      });
-      if (savedImage) {
-        Alert.alert('Success', 'Photo saved successfully', [
-          {
-            style: 'cancel',
-            text: 'cancel',
-            onPress: () => {
-              setCapturedImage('');
-              openCamera();
-            },
-          },
-          {
-            text: 'See Photos',
-            onPress: () => {
-              openCamera();
-              setCapturedImage('');
-              navigation.navigate('Gallery');
-            },
-          },
-        ]);
-      } else {
-        Alert.alert('Error', 'Failed to save photo');
+      if (!photo) {
+        throw new Error('No photo to send');
       }
+      savePhotoToStorage(photo);
+      const data = {
+        url: photo.path,
+        location: location,
+      };
+
+      const response = await axios.post(
+        'https://660296d89d7276a75553a45b.mockapi.io/api/img/photo',
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      console.log(JSON.stringify(data));
+      console.log('Data posted successfully:', response.data);
+
+      await CameraRoll.saveAsset(photo.path);
+
+      navigation.navigate('Mock Gallery');
     } catch (error) {
-      console.error('Error saving photo:', error);
-      Alert.alert('Error', 'Failed to save photo');
+      console.error('Error posting data:', error);
     }
   };
-
   if (device === null) {
     return (
       <View style={camStyles.mainView}>
-        <Text style={{fontSize: 20, color: 'red'}}>
-          Camera feature not supported
-        </Text>
+        <Text style={camStyles.errorText}>Camera feature not supported</Text>
       </View>
     );
   }
 
   return (
     <SafeAreaView style={camStyles.mainView}>
-      {capturedImage ? (
+      {photo ? (
         <>
           <View style={camStyles.capturedImageContainer}>
-            <Image
-              source={{uri: capturedImage}}
-              style={{
-                width: '100%',
-                height: '100%',
-              }}
-            />
+            <Image source={{uri: photo.path}} style={camStyles.capturedImage} />
           </View>
           <View style={camStyles.capturedButtonsContainer}>
             <Pressable
               onPress={() => {
-                setCapturedImage(null);
+                setPhoto(null);
                 openCamera();
               }}>
               <Discard width={30} height={30} />
@@ -162,7 +190,7 @@ const CameraScreen: React.FC<Props> = ({navigation}) => {
 
       {isCameraVisible && (
         <>
-          <View style={styles.cameraButtons}>
+          <View style={camStyles.cameraButtons}>
             <Pressable onPress={closeCamera}>
               <Close width={30} height={30} />
             </Pressable>
@@ -179,12 +207,7 @@ const CameraScreen: React.FC<Props> = ({navigation}) => {
             isActive={true}
             resizeMode="contain"
           />
-
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 100,
-            }}>
+          <View style={camStyles.captureButtonContainer}>
             <Pressable onPress={takePhoto}>
               <View style={camStyles.captureButton} />
             </Pressable>
