@@ -1,7 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {RootStackParamList} from './RootStackParamList';
-import ScreenA from '../screens/ScreenA';
+import Home from '../screens/Home';
 import CameraScreen from '../screens/Camera';
 import MyTabBar from '../components/organisms/CustomTabBar';
 import AlbumGallery from '../screens/AlbumGallery';
@@ -14,7 +14,7 @@ const MainNavigator = () => {
     <MainStackNavigator.Navigator tabBar={props => <MyTabBar {...props} />}>
       <MainStackNavigator.Screen
         name="Home"
-        component={ScreenA}
+        component={Home}
         options={{headerShown: false}}
       />
       <MainStackNavigator.Screen

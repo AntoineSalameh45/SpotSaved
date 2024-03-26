@@ -14,7 +14,7 @@ import imageGalleryStyles from './styles';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import axios from 'axios';
 
-const ScreenA = () => {
+const Home = () => {
   const [albumPhotos, setAlbumPhotos] = useState([]);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
@@ -113,4 +113,4 @@ const ScreenA = () => {
   );
 };
 
-export default ScreenA;
+export default Home;
