@@ -6,13 +6,29 @@ import {
   RefreshControl,
   TouchableOpacity,
   Alert,
+  StyleSheet,
+  Button,
 } from 'react-native';
 import axios from 'axios';
-import apiStyles from './styles';
+import MapView, {Marker} from 'react-native-maps';
+import apiStyles from './styles'; // Import your styles from the appropriate file
+
+interface Photo {
+  id: number;
+  url: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+}
 
 const PhotoList = () => {
-  const [photos, setPhotos] = useState([]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   const fetchData = async () => {
     try {
@@ -41,13 +57,26 @@ const PhotoList = () => {
     longitude: number,
     url: string,
   ) => {
+    setSelectedLocation({latitude, longitude});
     Alert.alert(
       'Details:',
       `Path: \n${url}\n\nCoordinates:\nLatitude: ${latitude}\nLongitude: ${longitude}`,
+      [
+        {
+          text: 'Show on Map',
+          onPress: () => {},
+        },
+        {
+          text: 'Cancel',
+          onPress: () => setSelectedLocation(null),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
     );
   };
 
-  const renderItem = ({item}: any) => (
+  const renderItem = ({item}: {item: Photo}) => (
     <TouchableOpacity
       style={apiStyles.item}
       onPress={() =>
@@ -60,6 +89,9 @@ const PhotoList = () => {
       <Image source={{uri: `file://${item.url}`}} style={apiStyles.image} />
     </TouchableOpacity>
   );
+  const handleCloseMap = () => {
+    setSelectedLocation(null);
+  };
 
   return (
     <View style={apiStyles.viewContainer}>
@@ -71,6 +103,26 @@ const PhotoList = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
+      {selectedLocation && (
+        <>
+          <MapView
+            style={StyleSheet.absoluteFillObject}
+            initialRegion={{
+              latitude: selectedLocation.latitude,
+              longitude: selectedLocation.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}>
+            <Marker
+              coordinate={{
+                latitude: selectedLocation.latitude,
+                longitude: selectedLocation.longitude,
+              }}
+            />
+          </MapView>
+          <Button title="Close Map" onPress={handleCloseMap} />
+        </>
+      )}
     </View>
   );
 };
