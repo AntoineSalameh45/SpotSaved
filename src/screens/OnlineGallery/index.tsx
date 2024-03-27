@@ -1,4 +1,3 @@
-// PhotoList.js
 import React, {useState, useEffect} from 'react';
 import {
   View,
@@ -9,6 +8,7 @@ import {
   Alert,
   Button,
   Pressable,
+  Text, // Import Text component
 } from 'react-native';
 import axios from 'axios';
 import MapView, {Marker} from 'react-native-maps';
@@ -29,7 +29,7 @@ interface iPhoto {
   };
 }
 
-const PhotoList = () => {
+const OnlineGallery = () => {
   const [photos, setPhotos] = useState<iPhoto[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<{
@@ -145,6 +145,14 @@ const PhotoList = () => {
     };
   });
 
+  const renderEmptyMessage = () => (
+    <>
+      <View style={apiStyles.emptyMessageContainer}>
+        <Text style={apiStyles.emptyMessageText}>No images available yet.</Text>
+      </View>
+    </>
+  );
+
   return (
     <View style={apiStyles.viewContainer}>
       <FlatList
@@ -154,6 +162,7 @@ const PhotoList = () => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        ListEmptyComponent={renderEmptyMessage}
       />
       {selectedLocation && (
         <>
@@ -187,4 +196,4 @@ const PhotoList = () => {
   );
 };
 
-export default PhotoList;
+export default OnlineGallery;

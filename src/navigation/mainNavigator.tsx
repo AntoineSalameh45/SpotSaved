@@ -5,7 +5,7 @@ import Home from '../screens/Home';
 import CameraScreen from '../screens/Camera';
 import MyTabBar from '../components/organisms/CustomTabBar';
 import AlbumGallery from '../screens/AlbumGallery';
-import PhotoList from '../screens/MockGallery';
+import OnlineGallery from '../screens/OnlineGallery';
 
 const MainStackNavigator = createBottomTabNavigator<RootStackParamList>();
 
@@ -28,8 +28,8 @@ const MainNavigator = () => {
         options={{headerShown: false}}
       />
       <MainStackNavigator.Screen
-        name="Mock Gallery"
-        component={PhotoList}
+        name="Online Gallery"
+        component={OnlineGallery}
         options={{headerShown: false}}
       />
     </MainStackNavigator.Navigator>

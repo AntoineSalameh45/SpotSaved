@@ -34,5 +34,21 @@ const apiStyles = StyleSheet.create({
     zIndex: 999,
   },
   trashContainer: {padding: 10, zIndex: 999, top: -70, marginRight: 5},
+  emptyMessageContainer: {
+    backgroundColor: '#0C3B2E',
+    borderRadius: 100 / 2,
+    borderWidth: 2,
+    borderColor: '#FFBA00',
+    width: '80%',
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 50,
+  },
+  emptyMessageText: {
+    textAlign: 'center',
+    color: '#FFBA00',
+  },
 });
 export default apiStyles;
