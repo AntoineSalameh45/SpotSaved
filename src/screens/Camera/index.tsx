@@ -15,12 +15,12 @@ import camStyles from './styles';
 import CamFlip from '../../assets/CameraFlipSvg.svg';
 import Close from '../../assets/CloseSvg.svg';
 import CameraSvg from '../../assets/CameraSvg.svg';
-import SaveSvg from '../../assets/SaveSvg.svg';
-import ShareSvg from '../../assets/ShareSvg.svg';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CapturedImageButtons from '../../components/molecules/CapturedImageButtons';
+import CameraButtonsHint from '../../components/atoms/CameraButtonsHint';
 
 const CameraScreen = () => {
   const [cameraDevice, setCameraDevice] = useState<'back' | 'front'>('back');
@@ -160,21 +160,15 @@ const CameraScreen = () => {
               style={camStyles.capturedImage}
             />
           </View>
-          <View style={camStyles.capturedButtonsContainer}>
-            <Pressable
-              onPress={() => {
-                setCapturedImage(null);
-                openCamera();
-              }}>
-              <CameraSvg width={30} height={30} />
-            </Pressable>
-            <Pressable onPress={shareToApi}>
-              <ShareSvg width={30} height={30} />
-            </Pressable>
-            <Pressable onPress={saveImage}>
-              <SaveSvg width={30} height={30} />
-            </Pressable>
-          </View>
+          <CapturedImageButtons
+            onOpenCamera={() => {
+              setCapturedImage(null);
+              openCamera();
+            }}
+            onShareToApi={shareToApi}
+            onSaveImage={saveImage}
+          />
+          <CameraButtonsHint />
         </>
       ) : (
         <Pressable onPress={openCamera} style={camStyles.openCameraButton}>

@@ -7,7 +7,7 @@ import {
   RefreshControl,
   Dimensions,
   Pressable,
-  Text, // Import Text component
+  Text,
 } from 'react-native';
 import {
   PhotoIdentifier,
@@ -80,7 +80,7 @@ const AlbumGallery = ({navigation}: any) => {
 
   const renderPhotoItem = ({item}: {item: PhotoIdentifier}) => (
     <View style={albumGalleryStyles.rowContainer}>
-      <Pressable onPress={() => imageDetails(item.node.image.uri)}>
+      <Pressable onPress={() => imageDetails()}>
         <Image
           source={{uri: item.node.image.uri}}
           style={{width: imageWidth, height: imageWidth + 50}}

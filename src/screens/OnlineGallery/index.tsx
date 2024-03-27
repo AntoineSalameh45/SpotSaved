@@ -89,9 +89,7 @@ const OnlineGallery = () => {
       [
         {
           text: 'Show on Map',
-          onPress: () => {
-            /* Add navigation logic here */
-          },
+          onPress: () => {},
         },
         {
           text: 'Cancel',
@@ -132,7 +130,7 @@ const OnlineGallery = () => {
   );
 
   const handleCloseMap = () => {
-    translateY.value = withSpring(-700);
+    translateY.value = withSpring(-500);
     setTimeout(() => {
       translateY.value = withSpring(0);
       setSelectedLocation(null);
