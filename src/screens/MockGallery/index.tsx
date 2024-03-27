@@ -6,7 +6,6 @@ import {
   RefreshControl,
   TouchableOpacity,
   Alert,
-  StyleSheet,
   Button,
 } from 'react-native';
 import axios from 'axios';
@@ -33,6 +32,7 @@ const PhotoList = () => {
   const [selectedLocation, setSelectedLocation] = useState<{
     latitude: number;
     longitude: number;
+    url: string;
   } | null>(null);
 
   const translateY = useSharedValue(0);
@@ -77,7 +77,7 @@ const PhotoList = () => {
     id: string,
     url: string,
   ) => {
-    setSelectedLocation({latitude, longitude});
+    setSelectedLocation({latitude, longitude, url});
 
     translateY.value = 0;
 
@@ -146,8 +146,12 @@ const PhotoList = () => {
       {selectedLocation && (
         <>
           <Animated.View style={[apiStyles.mapContainer, animatedStyle]}>
+            <Image
+              source={{uri: `file://${selectedLocation.url}`}}
+              style={{flex: 0.5}}
+            />
             <MapView
-              style={StyleSheet.absoluteFillObject}
+              style={{flex: 0.5}}
               initialRegion={{
                 latitude: selectedLocation.latitude,
                 longitude: selectedLocation.longitude,
