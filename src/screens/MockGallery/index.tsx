@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   Button,
+  Pressable,
 } from 'react-native';
 import axios from 'axios';
 import MapView, {Marker} from 'react-native-maps';
@@ -17,6 +18,7 @@ import Animated, {
   withSpring,
   useAnimatedStyle,
 } from 'react-native-reanimated';
+import TrashSvg from '../../assets/TrashSvg.svg';
 
 interface iPhoto {
   id: string;
@@ -106,18 +108,27 @@ const PhotoList = () => {
   };
 
   const renderItem = ({item}: {item: iPhoto}) => (
-    <TouchableOpacity
-      style={apiStyles.item}
-      onPress={() =>
-        handleImagePress(
-          item.location.latitude,
-          item.location.longitude,
-          item.id,
-          item.url,
-        )
-      }>
-      <Image source={{uri: `file://${item.url}`}} style={apiStyles.image} />
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity
+        style={apiStyles.item}
+        onPress={() =>
+          handleImagePress(
+            item.location.latitude,
+            item.location.longitude,
+            item.id,
+            item.url,
+          )
+        }>
+        <Image source={{uri: `file://${item.url}`}} style={apiStyles.image} />
+      </TouchableOpacity>
+      <Pressable
+        onPress={() => deleteHandler(item.id)}
+        style={apiStyles.trashContainer}>
+        <View style={apiStyles.trashStyles}>
+          <TrashSvg width={30} height={30} />
+        </View>
+      </Pressable>
+    </>
   );
 
   const handleCloseMap = () => {

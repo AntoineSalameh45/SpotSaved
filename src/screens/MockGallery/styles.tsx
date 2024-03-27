@@ -28,5 +28,11 @@ const apiStyles = StyleSheet.create({
     zIndex: 2,
   },
   animatedViewStyles: {flex: 0.5},
+  trashStyles: {
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    zIndex: 999,
+  },
+  trashContainer: {padding: 10, zIndex: 999, top: -70, marginRight: 5},
 });
 export default apiStyles;
