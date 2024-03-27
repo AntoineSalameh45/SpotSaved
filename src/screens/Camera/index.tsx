@@ -16,7 +16,6 @@ import CamFlip from '../../assets/CameraFlipSvg.svg';
 import Close from '../../assets/CloseSvg.svg';
 import CameraSvg from '../../assets/CameraSvg.svg';
 import SaveSvg from '../../assets/SaveSvg.svg';
-import Discard from '../../assets/DiscardSvg.svg';
 import ShareSvg from '../../assets/ShareSvg.svg';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import Geolocation from '@react-native-community/geolocation';
@@ -143,11 +142,6 @@ const CameraScreen = () => {
     }
   };
 
-  const saveAndShare = async () => {
-    saveImage();
-    shareToApi();
-  };
-
   if (device === null) {
     return (
       <View style={camStyles.mainView}>
@@ -172,11 +166,8 @@ const CameraScreen = () => {
                 setCapturedImage(null);
                 openCamera();
               }}>
-              <Discard width={30} height={30} />
+              <CameraSvg width={30} height={30} />
             </Pressable>
-            {/* <Pressable onPress={saveAndShare}>
-              <CamFlip width={30} height={30} />
-            </Pressable> */}
             <Pressable onPress={shareToApi}>
               <ShareSvg width={30} height={30} />
             </Pressable>

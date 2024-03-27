@@ -40,7 +40,7 @@ const Home = () => {
   };
 
   const viewMoreImages = () => {
-    navigation.navigate('Mock Gallery');
+    navigation.navigate('Online Gallery');
   };
 
   const renderPhotoItem = ({item}: any) => (
@@ -66,7 +66,7 @@ const Home = () => {
   }) => {
     const trans = dragX.interpolate({
       inputRange: [-500, 0],
-      outputRange: [0.5, 1], // Adjust the scaling as needed
+      outputRange: [0.5, 1],
       extrapolate: 'clamp',
     });
     return (
@@ -118,7 +118,7 @@ const Home = () => {
 
         <View style={imageGalleryStyles.sectionContainer}>
           <Text style={imageGalleryStyles.sectionTitleMap}>
-            Your Saved Spots
+            Your Saved Spots (Coming Soon)
           </Text>
           <MapView
             provider={PROVIDER_GOOGLE}
