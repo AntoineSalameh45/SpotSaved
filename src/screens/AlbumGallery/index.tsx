@@ -1,4 +1,3 @@
-// AlbumGallery.js
 import React, {useState, useCallback} from 'react';
 import {
   View,
@@ -8,6 +7,7 @@ import {
   RefreshControl,
   Dimensions,
   Pressable,
+  Text, // Import Text component
 } from 'react-native';
 import {
   PhotoIdentifier,
@@ -16,6 +16,7 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import styles from '../../GlobalStyles';
 import albumGalleryStyles from './styles';
+import apiStyles from '../OnlineGallery/styles';
 
 const {width} = Dimensions.get('window');
 const imageWidth = (width - 20) / 3;
@@ -60,8 +61,8 @@ const AlbumGallery = ({navigation}: any) => {
     }
   };
 
-  const imageDetails = (uri: string) => {
-    navigation.navigate('Mock Gallery', {uri});
+  const imageDetails = () => {
+    navigation.navigate('Online Gallery');
   };
 
   const onRefresh = () => {
@@ -88,6 +89,12 @@ const AlbumGallery = ({navigation}: any) => {
     </View>
   );
 
+  const renderEmptyMessage = () => (
+    <View style={apiStyles.emptyMessageContainer}>
+      <Text style={apiStyles.emptyMessageText}>No images available yet.</Text>
+    </View>
+  );
+
   return (
     <View style={styles.viewContainer}>
       <View style={albumGalleryStyles.viewContainer}>
@@ -98,6 +105,7 @@ const AlbumGallery = ({navigation}: any) => {
           onEndReached={loadMorePhotos}
           onEndReachedThreshold={0.5}
           ListFooterComponent={loading ? <ActivityIndicator /> : null}
+          ListEmptyComponent={renderEmptyMessage}
           horizontal={false}
           numColumns={3}
           refreshControl={
