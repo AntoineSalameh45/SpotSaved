@@ -43,14 +43,27 @@ const Home = () => {
     navigation.navigate('Mock Gallery');
   };
 
-  const renderPhotoItem = ({item}) => (
+  const renderPhotoItem = ({item}: any) => (
     <Image
       source={{uri: `file://${item.url}`}}
       style={imageGalleryStyles.photoAlbum}
     />
   );
+  const ListFooterComponent = ({viewMoreImages}) => (
+    <Pressable
+      onPress={viewMoreImages}
+      style={imageGalleryStyles.viewMoreTextContainer}>
+      <Text style={imageGalleryStyles.viewMoreText}>View More Images &gt;</Text>
+    </Pressable>
+  );
 
-  const renderRightSwipeAction = dragX => {
+  const renderRightSwipeAction = (dragX: {
+    interpolate: (arg0: {
+      inputRange: number[];
+      outputRange: number[];
+      extrapolate: string;
+    }) => any;
+  }) => {
     const trans = dragX.interpolate({
       inputRange: [-500, 0],
       outputRange: [0.5, 1], // Adjust the scaling as needed
@@ -97,15 +110,9 @@ const Home = () => {
             renderItem={renderPhotoItem}
             keyExtractor={item => item.id.toString()}
             horizontal={true}
-            ListFooterComponent={() => (
-              <Pressable
-                onPress={viewMoreImages}
-                style={imageGalleryStyles.viewMoreTextContainer}>
-                <Text style={imageGalleryStyles.viewMoreText}>
-                  View More Images &gt;
-                </Text>
-              </Pressable>
-            )}
+            ListFooterComponent={
+              <ListFooterComponent viewMoreImages={viewMoreImages} />
+            }
           />
         </View>
 
