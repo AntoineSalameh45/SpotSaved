@@ -17,12 +17,13 @@ import Close from '../../assets/CloseSvg.svg';
 import CameraSvg from '../../assets/CameraSvg.svg';
 import SaveSvg from '../../assets/SaveSvg.svg';
 import Discard from '../../assets/DiscardSvg.svg';
+import ShareSvg from '../../assets/ShareSvg.svg';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CameraScreen = ({navigation}: any) => {
+const CameraScreen = () => {
   const [cameraDevice, setCameraDevice] = useState<'back' | 'front'>('back');
   const device = useCameraDevice(cameraDevice);
   const camera = useRef<Camera>(null);
@@ -110,6 +111,24 @@ const CameraScreen = ({navigation}: any) => {
     }
   };
 
+  const shareToApi = async () => {
+    const data = {
+      url: photo.path,
+      location: location,
+    };
+
+    const response = await axios.post(
+      'https://660296d89d7276a75553a45b.mockapi.io/api/img/photo',
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+
+    console.log('Data posted successfully:', response.data);
+  };
   const saveImage = async () => {
     try {
       if (!photo) {
@@ -118,29 +137,15 @@ const CameraScreen = ({navigation}: any) => {
 
       savePhotoToStorage(photo);
 
-      const data = {
-        url: photo.path,
-        location: location,
-      };
-
-      const response = await axios.post(
-        'https://660296d89d7276a75553a45b.mockapi.io/api/img/photo',
-        data,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-
-      console.log('Data posted successfully:', response.data);
-
       await CameraRoll.saveAsset(photo.path);
-
-      navigation.navigate('Gallery');
     } catch (error) {
       console.error('Error posting data:', error);
     }
+  };
+
+  const saveAndShare = async () => {
+    saveImage();
+    shareToApi();
   };
 
   if (device === null) {
@@ -168,6 +173,12 @@ const CameraScreen = ({navigation}: any) => {
                 openCamera();
               }}>
               <Discard width={30} height={30} />
+            </Pressable>
+            {/* <Pressable onPress={saveAndShare}>
+              <CamFlip width={30} height={30} />
+            </Pressable> */}
+            <Pressable onPress={shareToApi}>
+              <ShareSvg width={30} height={30} />
             </Pressable>
             <Pressable onPress={saveImage}>
               <SaveSvg width={30} height={30} />
