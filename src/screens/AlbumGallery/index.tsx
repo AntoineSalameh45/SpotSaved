@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+// AlbumGallery.js
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Image,
@@ -6,20 +7,20 @@ import {
   ActivityIndicator,
   RefreshControl,
   Dimensions,
+  Pressable,
 } from 'react-native';
 import {
   PhotoIdentifier,
   CameraRoll,
 } from '@react-native-camera-roll/camera-roll';
+import {useFocusEffect} from '@react-navigation/native';
 import styles from '../../GlobalStyles';
 import albumGalleryStyles from './styles';
 
 const {width} = Dimensions.get('window');
 const imageWidth = (width - 20) / 3;
 
-interface Props {}
-
-const AlbumGallery: React.FC<Props> = () => {
+const AlbumGallery = ({navigation}: any) => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [albumPhotos, setAlbumPhotos] = useState<PhotoIdentifier[]>([]);
@@ -33,6 +34,9 @@ const AlbumGallery: React.FC<Props> = () => {
         first: 21,
         after,
       });
+      if (!after) {
+        setAlbumPhotos([]);
+      }
       setAlbumPhotos(existingPhotos => [
         ...existingPhotos,
         ...cameraRollPhotos.edges,
@@ -50,28 +54,37 @@ const AlbumGallery: React.FC<Props> = () => {
     }
   };
 
-  useEffect(() => {
-    fetchAlbumPhotos();
-  }, []);
-
   const loadMorePhotos = () => {
     if (!loading && nextPage) {
       fetchAlbumPhotos(nextPage);
     }
   };
 
+  const imageDetails = (uri: string) => {
+    navigation.navigate('Mock Gallery', {uri});
+  };
+
   const onRefresh = () => {
-    setAlbumPhotos([]);
     setNextPage(null);
     setRefreshing(true);
     fetchAlbumPhotos();
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAlbumPhotos();
+      return () => {};
+    }, []),
+  );
+
   const renderPhotoItem = ({item}: {item: PhotoIdentifier}) => (
     <View style={albumGalleryStyles.rowContainer}>
-      <Image
-        source={{uri: item.node.image.uri}}
-        style={{width: imageWidth, height: imageWidth + 50}}
-      />
+      <Pressable onPress={() => imageDetails(item.node.image.uri)}>
+        <Image
+          source={{uri: item.node.image.uri}}
+          style={{width: imageWidth, height: imageWidth + 50}}
+        />
+      </Pressable>
     </View>
   );
 

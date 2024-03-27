@@ -74,28 +74,6 @@ const CameraScreen = ({navigation}: any) => {
 
   const closeCamera = () => setIsCameraVisible(false);
 
-  const requestLocationPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Location Permission',
-          message: 'App needs access to your location ',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the Location');
-      } else {
-        console.log('Location permission denied');
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  };
-
   const getLocation = () => {
     Geolocation.getCurrentPosition(
       (position: any) => {
@@ -138,16 +116,13 @@ const CameraScreen = ({navigation}: any) => {
         throw new Error('No photo to send');
       }
 
-      // Save photo to AsyncStorage
       savePhotoToStorage(photo);
 
-      // Prepare data to send to API
       const data = {
         url: photo.path,
         location: location,
       };
 
-      // Post data to API
       const response = await axios.post(
         'https://660296d89d7276a75553a45b.mockapi.io/api/img/photo',
         data,
@@ -160,10 +135,9 @@ const CameraScreen = ({navigation}: any) => {
 
       console.log('Data posted successfully:', response.data);
 
-      // Save to camera roll
       await CameraRoll.saveAsset(photo.path);
 
-      navigation.navigate('Mock Gallery');
+      navigation.navigate('Gallery');
     } catch (error) {
       console.error('Error posting data:', error);
     }

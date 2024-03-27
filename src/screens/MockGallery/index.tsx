@@ -1,3 +1,4 @@
+// PhotoList.js
 import React, {useState, useEffect} from 'react';
 import {
   View,
@@ -69,6 +70,7 @@ const PhotoList = () => {
       .catch(error => {
         console.log(error);
       });
+    handleCloseMap();
   };
 
   const handleImagePress = (
@@ -78,16 +80,16 @@ const PhotoList = () => {
     url: string,
   ) => {
     setSelectedLocation({latitude, longitude, url});
-
     translateY.value = 0;
-
     Alert.alert(
       'Details:',
       `Path: \n${url}\n\nCoordinates:\nLatitude: ${latitude}\nLongitude: ${longitude}`,
       [
         {
           text: 'Show on Map',
-          onPress: () => {},
+          onPress: () => {
+            /* Add navigation logic here */
+          },
         },
         {
           text: 'Cancel',
@@ -120,7 +122,6 @@ const PhotoList = () => {
 
   const handleCloseMap = () => {
     translateY.value = withSpring(-700);
-
     setTimeout(() => {
       translateY.value = withSpring(0);
       setSelectedLocation(null);
