@@ -18,8 +18,8 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
-interface Photo {
-  id: number;
+interface iPhoto {
+  id: string;
   url: string;
   location: {
     latitude: number;
@@ -28,7 +28,7 @@ interface Photo {
 }
 
 const PhotoList = () => {
-  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [photos, setPhotos] = useState<iPhoto[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<{
     latitude: number;
@@ -59,9 +59,22 @@ const PhotoList = () => {
     fetchData();
   };
 
+  const deleteHandler = (id: string) => {
+    axios
+      .delete(`https://660296d89d7276a75553a45b.mockapi.io/api/img/photo/${id}`)
+      .then(response => {
+        console.log(response);
+        setPhotos(prevPhotos => prevPhotos.filter(photo => photo.id !== id));
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   const handleImagePress = (
     latitude: number,
     longitude: number,
+    id: string,
     url: string,
   ) => {
     setSelectedLocation({latitude, longitude});
@@ -81,18 +94,23 @@ const PhotoList = () => {
           onPress: () => setSelectedLocation(null),
           style: 'cancel',
         },
+        {
+          text: 'Delete',
+          onPress: () => deleteHandler(id),
+        },
       ],
       {cancelable: false},
     );
   };
 
-  const renderItem = ({item}: {item: Photo}) => (
+  const renderItem = ({item}: {item: iPhoto}) => (
     <TouchableOpacity
       style={apiStyles.item}
       onPress={() =>
         handleImagePress(
           item.location.latitude,
           item.location.longitude,
+          item.id,
           item.url,
         )
       }>
