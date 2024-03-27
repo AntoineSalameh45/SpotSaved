@@ -148,10 +148,10 @@ const PhotoList = () => {
           <Animated.View style={[apiStyles.mapContainer, animatedStyle]}>
             <Image
               source={{uri: `file://${selectedLocation.url}`}}
-              style={{flex: 0.5}}
+              style={apiStyles.animatedViewStyles}
             />
             <MapView
-              style={{flex: 0.5}}
+              style={apiStyles.animatedViewStyles}
               initialRegion={{
                 latitude: selectedLocation.latitude,
                 longitude: selectedLocation.longitude,

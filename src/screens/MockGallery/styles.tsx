@@ -27,5 +27,6 @@ const apiStyles = StyleSheet.create({
     right: 20,
     zIndex: 2,
   },
+  animatedViewStyles: {flex: 0.5},
 });
 export default apiStyles;
